@@ -7,7 +7,9 @@ use std::{
   time::Duration,
 };
 
-use dart_sdk_sys::{Dart_Handle, Dart_PersistentHandle};
+use dart_sdk_sys::{
+  Dart_FinalizableHandle, Dart_Handle, Dart_HandleFinalizer, Dart_PersistentHandle,
+};
 use extern_executor::spawn;
 use futures_timer::Delay;
 
@@ -20,6 +22,12 @@ extern "C" {
   fn Dart_NewApiError_DL_Trampolined(msg: *const libc::c_char) -> Dart_Handle;
   fn Dart_NewUnhandledExceptionError_DL_Trampolined(exception: Dart_Handle) -> Dart_Handle;
   fn Dart_PropagateError_DL_Trampolined(handle: Dart_Handle);
+  fn Dart_NewFinalizableHandle_DL_Trampolined(
+    handle: Dart_Handle,
+    peer: *mut libc::c_void,
+    external_allocation_size: usize,
+    callback: Dart_HandleFinalizer,
+  ) -> Dart_FinalizableHandle;
 }
 
 pub struct DartCallback {

@@ -30,3 +30,7 @@ void Dart_PropagateError_DL_Trampolined(Dart_Handle handle)
 {
     Dart_PropagateError_DL(handle);
 }
+
+Dart_FinalizableHandle Dart_NewFinalizableHandle_DL_Trampolined(Dart_Handle object, void* peer, intptr_t external_allocation_size, Dart_HandleFinalizer callback){
+    return Dart_NewFinalizableHandle_DL(object, peer, external_allocation_size, callback);
+};
