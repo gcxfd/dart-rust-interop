@@ -9,6 +9,15 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e3c69b077ad434294d3ce9f1f6143a2a4b89a8a2d54ef813d85003a4fd1137fd"
 
 [[package]]
+name = "dart-sdk-sys"
+version = "2.14.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "29a4df4821aefc55e5c9ba0f1c5c94596fe781a685bea9942add8b9feea91e2d"
+dependencies = [
+ "libc",
+]
+
+[[package]]
 name = "dart-sys"
 version = "2.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -181,7 +190,7 @@ name = "rust_ffi"
 version = "0.0.1"
 dependencies = [
  "cc",
- "dart-sys",
+ "dart-sdk-sys",
  "extern_executor",
  "futures",
  "futures-timer",

@@ -1,7 +1,7 @@
 import 'dart:ffi';
 import 'dart:isolate';
 
-class _RustTask extends Struct {}
+class _RustTask extends Opaque {}
 
 typedef _rustTaskPoll = Int8 Function(Pointer<_RustTask> task);
 typedef _RustTaskPoll = int Function(Pointer<_RustTask> task);
@@ -24,14 +24,14 @@ class Executor {
 
   Executor(DynamicLibrary dylib)
       : _taskPoll = dylib
-            .lookup<NativeFunction<_rustTaskPoll>>('task_poll')
-            .asFunction(),
+        .lookup<NativeFunction<_rustTaskPoll>>('task_poll')
+        .asFunction(),
         _taskDrop = dylib
-            .lookup<NativeFunction<_rustTaskDrop>>('task_drop')
-            .asFunction(),
+        .lookup<NativeFunction<_rustTaskDrop>>('task_drop')
+        .asFunction(),
         _loopInit = dylib
-            .lookup<NativeFunction<_rustLoopInit>>('loop_init')
-            .asFunction(),
+        .lookup<NativeFunction<_rustLoopInit>>('loop_init')
+        .asFunction(),
         _wakePort = null {}
 
   bool get started => _wakePort != null;

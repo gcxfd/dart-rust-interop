@@ -4,19 +4,19 @@ import 'package:ffi/ffi.dart';
 
 import 'executor.dart';
 
-final nativeLib = DynamicLibrary.open('./rust/target/debug/librust_ffi.so');
+final nativeLib = DynamicLibrary.open('./rust/target/release/librust_ffi.dylib');
 
 void doDynamicLinking() {
   final nativeInitializeApi = nativeLib.lookupFunction<
       IntPtr Function(Pointer<Void>),
-      int Function(Pointer<Void>)>("InitDartApiDL");
+  int Function(Pointer<Void>)>("InitDartApiDL");
 
   if (nativeInitializeApi(NativeApi.initializeApiDLData) != 0) {
     throw "Failed to initialize Dart API";
   }
 
   nativeLib.lookupFunction<Void Function(Pointer), void Function(Pointer)>(
-          "RegisterClosureCallerFP")(
+      "RegisterClosureCallerFP")(
       Pointer.fromFunction<Void Function(Handle)>(doClosureCallback));
 }
 
@@ -57,11 +57,11 @@ void main() async {
 /////////////////////// simple callback
 
 final nativeRegisterClosureCallback = nativeLib.lookupFunction<
-    Void Function(Handle),
-    void Function(void Function())>("RegisterClosureCallback");
+Void Function(Handle),
+     void Function(void Function())>("RegisterClosureCallback");
 
 final nativeInvokeClosureCallback = nativeLib
-    .lookupFunction<Void Function(), void Function()>("InvokeClosureCallback");
+.lookupFunction<Void Function(), void Function()>("InvokeClosureCallback");
 
 void doClosureCallback(void Function() callback) {
   callback();
@@ -77,7 +77,7 @@ void simpleCallback() {
 //////////////////// async fn
 
 final nativeRunAsync = nativeLib.lookupFunction<Void Function(Int64, Handle),
-    void Function(int, void Function())>("RunAsync");
+      void Function(int, void Function())>("RunAsync");
 
 Future<void> runAsync(int) async {
   final Completer _completer = new Completer();
@@ -89,7 +89,7 @@ Future<void> runAsync(int) async {
 //////////////// strings
 
 final nativeStrings = nativeLib.lookupFunction<
-    Pointer<Utf8> Function(Pointer<Utf8>),
+Pointer<Utf8> Function(Pointer<Utf8>),
     Pointer<Utf8> Function(Pointer<Utf8>)>("Strings");
 
 String strings(String stringIn) {
@@ -103,8 +103,8 @@ String strings(String stringIn) {
 }
 
 final nativeFreeRustString = nativeLib.lookupFunction<
-    Void Function(Pointer<Utf8>),
-    void Function(Pointer<Utf8>)>("FreeRustString");
+Void Function(Pointer<Utf8>),
+     void Function(Pointer<Utf8>)>("FreeRustString");
 
 extension RustStringPointer on Pointer<Utf8> {
   String rustStringToDart() {
@@ -119,7 +119,7 @@ extension RustStringPointer on Pointer<Utf8> {
 //////////////// throw from native
 
 final nativeThrowFromNative = nativeLib
-    .lookupFunction<Void Function(), void Function()>("ThrowFromNative");
+.lookupFunction<Void Function(), void Function()>("ThrowFromNative");
 
 void throwFromNative() {
   nativeThrowFromNative();
@@ -128,14 +128,14 @@ void throwFromNative() {
 /////////////// call dart future from rust
 
 final nativeOneshotSendOk = nativeLib.lookupFunction<
-    Void Function(Pointer, Int64),
-    void Function(Pointer, int)>("OneshotSendOk");
+Void Function(Pointer, Int64),
+     void Function(Pointer, int)>("OneshotSendOk");
 final nativeOneshotSendErr = nativeLib.lookupFunction<
-    Void Function(Pointer, Int64),
-    void Function(Pointer, int)>("OneshotSendErr");
+Void Function(Pointer, Int64),
+     void Function(Pointer, int)>("OneshotSendErr");
 final nativeCallDartFutureFromRust = nativeLib.lookupFunction<
-    Void Function(Pointer, Handle),
-    void Function(Pointer, void Function())>("CallDartFutureFromRust");
+Void Function(Pointer, Handle),
+     void Function(Pointer, void Function())>("CallDartFutureFromRust");
 
 Future<void> callDartFutureFromRustFromDart() {
   final Completer _completer = new Completer();
@@ -162,7 +162,7 @@ void wrapperForSomeDartAsyncFn(Pointer txPtr) {
 enum Color { blue, rust }
 
 final nativeEnums =
-    nativeLib.lookupFunction<Uint8 Function(Uint8), int Function(int)>("Enums");
+nativeLib.lookupFunction<Uint8 Function(Uint8), int Function(int)>("Enums");
 
 Color enums(Color color) {
   return Color.values[nativeEnums(color.index)];
@@ -171,9 +171,9 @@ Color enums(Color color) {
 //////////////// arrays
 
 final nativeArrays =
-    nativeLib.lookupFunction<Array Function(), Array Function()>("Arrays");
+nativeLib.lookupFunction<Array Function(), Array Function()>("Arrays");
 final nativeFreeArray = nativeLib
-    .lookupFunction<Void Function(Array), void Function(Array)>("FreeArray");
+.lookupFunction<Void Function(Array), void Function(Array)>("FreeArray");
 
 class Array extends Struct {
   Pointer<Int64> arr;

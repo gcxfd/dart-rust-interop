@@ -9,7 +9,7 @@ name = "rust_ffi"
 crate-type = ["cdylib"]
 
 [dependencies]
-dart-sys = "2.0"
+dart-sdk-sys = "2.14.3"
 extern_executor = { version = "0.1.2", features = ["dart"]}
 futures = "0.3"
 futures-timer = "3.0"
